@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wilson Michael — Web Developer</title>
-  <style>
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -21,7 +20,7 @@
     }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'DM Mono', monospace;
       background: var(--bg);
       color: var(--text);
       overflow-x: hidden;
@@ -79,7 +78,7 @@
       backdrop-filter: blur(12px);
     }
     .nav-logo {
-      font-family: 'Segoe UI', 'Arial Black', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-weight: 800;
       font-size: 1.1rem;
       letter-spacing: 0.05em;
@@ -142,7 +141,7 @@
       background: var(--accent);
     }
     .hero-name {
-      font-family: 'Segoe UI', 'Arial Black', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-weight: 800;
       font-size: clamp(3.5rem, 9vw, 8rem);
       line-height: 0.92;
@@ -172,7 +171,7 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.85rem 2rem;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'DM Mono', monospace;
       font-size: 0.78rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -241,7 +240,7 @@
       opacity: 0.4;
     }
     .section-title {
-      font-family: 'Segoe UI', 'Arial Black', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-weight: 800;
       font-size: clamp(2rem, 5vw, 3.5rem);
       letter-spacing: -0.02em;
@@ -289,7 +288,7 @@
     .stat-card:hover { border-color: var(--accent2); }
     .stat-card:hover::before { opacity: 1; }
     .stat-num {
-      font-family: 'Segoe UI', 'Arial Black', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 2.5rem;
       font-weight: 800;
       color: var(--accent);
@@ -313,7 +312,7 @@
     }
     .skill-group:hover { border-color: var(--accent); transform: translateY(-4px); }
     .skill-group-title {
-      font-family: 'Segoe UI', 'Arial Black', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 0.15em;
@@ -401,7 +400,7 @@
       color: var(--muted);
     }
     .project-title {
-      font-family: 'Segoe UI', 'Arial Black', sans-serif;
+      font-family: 'Syne', sans-serif;
       font-size: 1.3rem;
       font-weight: 700;
       margin-bottom: 0.8rem;
@@ -478,7 +477,7 @@
       border: 1px solid var(--border);
       border-radius: 2px;
       padding: 0.9rem 1.2rem;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'DM Mono', monospace;
       font-size: 0.85rem;
       color: var(--text);
       outline: none;
@@ -494,7 +493,7 @@
       color: var(--bg);
       border: none;
       padding: 1rem 2rem;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'DM Mono', monospace;
       font-size: 0.78rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -528,6 +527,7 @@
       transform: translateY(30px);
       transition: opacity 0.7s, transform 0.7s;
     }
+    .reveal { opacity: 1 !important; transform: none !important; }
     .reveal.visible {
       opacity: 1;
       transform: translateY(0);
@@ -738,11 +738,11 @@
               +20 120 060 0627
             </div>
           </a>
-          <a href="mailto:wilsonmichael15112011@gmail.com" class="contact-link">
+          <a href="/cdn-cgi/l/email-protection#a6d1cfcad5c9c8cbcfc5cec7c3ca9793979794969797e6c1cbc7cfca88c5c9cb" class="contact-link">
             <div class="contact-link-icon">✉️</div>
             <div>
               <div style="font-size:0.7rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.2rem;">Email</div>
-              wilsonmichael15112011@gmail.com
+              <span class="__cf_email__" data-cfemail="42352b2e312d2c2f2b212a23272e737773737072737302252f232b2e6c212d2f">[email&#160;protected]</span>
             </div>
           </a>
         </div>
@@ -773,7 +773,7 @@
     <p>Built with <span>♥</span> in Egypt</p>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // Custom cursor
     const cursor = document.getElementById('cursor');
     const ring = document.getElementById('cursorRing');
@@ -813,11 +813,4 @@
           setTimeout(() => e.target.classList.add('visible'), i * 100);
         }
       });
-    }, { threshold: 0.1 });
-    reveals.forEach(el => observer.observe(el));
-
-    // Skill bars
-    const barObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.querySelectorAll('.skill
+    }, 
