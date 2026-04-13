@@ -503,6 +503,25 @@
       transition: background 0.2s, transform 0.2s;
     }
     .form-submit:hover { background: #fff; transform: translateY(-2px); }
+    /* THANK YOU */
+    .thankyou {
+      display: none;
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+    }
+    .thankyou.show { display: block; }
+    .thankyou-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .thankyou h3 {
+      font-family: "Syne", sans-serif;
+      font-size: 1.5rem;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+    }
+    .thankyou p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+
     /* FOOTER */
     footer {
       padding: 2.5rem 3rem;
@@ -738,7 +757,7 @@
               +20 120 060 0627
             </div>
           </a>
-          <a href="mailto:wilsonmichael15112011@gmail.com" class="contact-link">
+          <a href="/cdn-cgi/l/email-protection#b8cfd1d4cbd7d6d5d1dbd0d9ddd4898d89898a888989f8dfd5d9d1d496dbd7d5" class="contact-link">
             <div class="contact-link-icon">✉️</div>
             <div>
               <div style="font-size:0.7rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.2rem;">Email</div>
@@ -748,7 +767,12 @@
         </div>
       </div>
       <div class="reveal">
-        <form class="contact-form" action="https://formspree.io/f/mdayoyeb" method="POST">
+        <div id="thankyou" class="thankyou">
+          <div class="thankyou-icon">🎉</div>
+          <h3>Message Sent!</h3>
+          <p>Thank you for reaching out!<br>I will get back to you as soon as possible.</p>
+        </div>
+        <form class="contact-form" id="contactForm">
           <div class="form-group">
             <label>Your Name</label>
             <input type="text" name="name" placeholder="John Doe" required />
@@ -761,7 +785,7 @@
             <label>Message</label>
             <textarea name="message" placeholder="Tell me about your project..."></textarea>
           </div>
-          <button type="submit" class="form-submit">Send Message →</button>
+          <button type="submit" class="form-submit" id="submitBtn">Send Message →</button>
         </form>
       </div>
     </div>
@@ -773,7 +797,7 @@
     <p>Built with <span>♥</span> in Egypt</p>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // Custom cursor
     const cursor = document.getElementById('cursor');
     const ring = document.getElementById('cursorRing');
@@ -808,9 +832,4 @@
     // Reveal on scroll
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver(entries => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-          setTimeout(() => e.target.classList.add('visible'), i * 100);
-        }
-      });
-    }, 
+   
