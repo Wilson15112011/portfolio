@@ -1,507 +1,398 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" id="root" dir="ltr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wilson Michael — Full Stack Developer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #080c12; --bg2: #0d1420; --bg3: #111927;
-      --accent: #00e5ff; --accent2: #7b61ff; --gold: #f0c040;
-      --text: #e8edf5; --muted: #6b7a99;
-      --border: rgba(0,229,255,0.12); --card: rgba(13,20,32,0.85);
-      --glow: 0 0 40px rgba(0,229,255,0.15);
-    }
-    html { scroll-behavior: smooth; }
-    body { 
-      font-family: 'Syne', sans-serif; 
-      background: var(--bg); 
-      color: var(--text); 
-      overflow-x: hidden; 
-      cursor: default !important; /* Cursor طبيعي */
-    }
-
-    /* ====================== CUSTOM CURSOR REMOVED ====================== */
-    .cursor,
-    .cursor-ring {
-      display: none !important;
-    }
-
-    /* إرجاع الـ cursor الطبيعي لكل العناصر */
-    body * {
-      cursor: default !important;
-    }
-
-    body::before { 
-      content:'';position:fixed;inset:0;z-index:0;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events:none;opacity:0.4; 
-    }
-    body::after { 
-      content:'';position:fixed;inset:0;z-index:0;
-      background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);
-      background-size:60px 60px;pointer-events:none; 
-    }
-    nav { 
-      position:fixed;top:0;left:0;right:0;z-index:100;
-      display:flex;align-items:center;justify-content:space-between;
-      padding:20px 60px;background:rgba(8,12,18,0.85);
-      backdrop-filter:blur(20px);border-bottom:1px solid var(--border); 
-    }
-    .nav-logo { font-family:'Space Mono',monospace;font-size:1rem;color:var(--accent);letter-spacing:0.15em; }
-    .nav-logo span { color:var(--muted); }
-    .nav-links { display:flex;gap:36px;list-style:none; }
-    .nav-links a { 
-      font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;
-      color:var(--muted);text-decoration:none;transition:color 0.3s;position:relative; 
-    }
-    .nav-links a::after { 
-      content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;
-      background:var(--accent);transition:width 0.3s; 
-    }
-    .nav-links a:hover { color:var(--accent); }
-    .nav-links a:hover::after { width:100%; }
-    .lang-toggle { 
-      font-family:'Space Mono',monospace;font-size:0.72rem;padding:7px 16px;
-      background:transparent;border:1px solid var(--border);color:var(--accent);
-      cursor: pointer;border-radius:4px;letter-spacing:0.1em;
-      transition:background 0.3s,border-color 0.3s; 
-    }
-    .lang-toggle:hover { background:rgba(0,229,255,0.08);border-color:var(--accent); }
-
-    #hero { min-height:100vh;display:flex;align-items:center;padding:140px 60px 80px;position:relative;z-index:1;overflow:hidden; }
-    .hero-glow { position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(0,229,255,0.07) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none;animation:pulse 6s ease-in-out infinite; }
-    .hero-glow2 { position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(123,97,255,0.07) 0%,transparent 70%);bottom:0;left:100px;pointer-events:none;animation:pulse 8s ease-in-out infinite reverse; }
-    @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.1);opacity:0.7} }
-    
-    .hero-content { max-width:800px;position:relative; }
-    .hero-tag { display:inline-flex;align-items:center;gap:10px;font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:28px;opacity:0;animation:fadeUp 0.7s forwards 0.2s; }
-    .hero-tag::before { content:'';width:32px;height:1px;background:var(--accent); }
-    .hero-name { font-size:clamp(3.5rem,7vw,6.5rem);font-weight:800;line-height:1;letter-spacing:-0.02em;margin-bottom:16px;opacity:0;animation:fadeUp 0.8s forwards 0.4s; }
-    .hero-name .first { color:var(--text); }
-    .hero-name .last { color:transparent;-webkit-text-stroke:1.5px var(--accent); }
-    .hero-title { font-size:clamp(1rem,2.5vw,1.4rem);font-weight:400;color:var(--muted);margin-bottom:32px;opacity:0;animation:fadeUp 0.8s forwards 0.55s; }
-    .hero-title .highlight { color:var(--accent2);font-weight:600; }
-    .hero-desc { font-size:1rem;line-height:1.8;color:var(--muted);max-width:540px;margin-bottom:48px;opacity:0;animation:fadeUp 0.8s forwards 0.7s; }
-    .hero-cta { display:flex;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeUp 0.8s forwards 0.85s; }
-    
-    .btn-primary { 
-      display:inline-flex;align-items:center;gap:10px;padding:14px 32px;
-      font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
-      background:var(--accent);color:var(--bg);border:none;border-radius:4px;
-      cursor: pointer;text-decoration:none;
-      transition:transform 0.2s,box-shadow 0.2s;
-      box-shadow:0 0 24px rgba(0,229,255,0.3); 
-    }
-    .btn-primary:hover { transform:translateY(-2px);box-shadow:0 0 40px rgba(0,229,255,0.5); }
-    
-    .btn-outline { 
-      display:inline-flex;align-items:center;gap:10px;padding:14px 32px;
-      font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
-      background:transparent;color:var(--text);border:1px solid var(--border);
-      border-radius:4px;cursor: pointer;text-decoration:none;
-      transition:border-color 0.3s,color 0.3s; 
-    }
-    .btn-outline:hover { border-color:var(--accent);color:var(--accent); }
-
-    .scroll-hint { 
-      position:absolute;bottom:40px;left:60px;display:flex;align-items:center;
-      gap:12px;font-family:'Space Mono',monospace;font-size:0.68rem;
-      letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;
-      opacity:0;animation:fadeUp 1s forwards 1.2s; 
-    }
-    .scroll-line { width:40px;height:1px;background:var(--muted);animation:scrollAnim 2s ease-in-out infinite; }
-    @keyframes scrollAnim { 0%,100%{width:40px;opacity:0.4} 50%{width:70px;opacity:1} }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-
-    section { padding:110px 60px;position:relative;z-index:1; }
-    .section-header { margin-bottom:70px; }
-    .section-label { font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:12px; }
-    .section-label::before { content:'';width:24px;height:1px;background:var(--accent); }
-    .section-title { font-size:clamp(2rem,4vw,3.2rem);font-weight:800;line-height:1.15; }
-
-    #about { background:var(--bg2); }
-    .about-grid { display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center; }
-    .about-text p { color:var(--muted);line-height:1.9;font-size:1rem;margin-bottom:20px; }
-    .about-text p:last-child { margin-bottom:0; }
-    .about-text .em { color:var(--text);font-weight:600; }
-    .about-text .accent { color:var(--accent); }
-    .about-stats { display:grid;grid-template-columns:1fr 1fr;gap:24px; }
-    .stat-card { background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;backdrop-filter:blur(10px);transition:border-color 0.3s,transform 0.3s; }
-    .stat-card:hover { border-color:var(--accent);transform:translateY(-4px); }
-    .stat-num { font-size:2.8rem;font-weight:800;color:var(--accent);line-height:1;margin-bottom:6px;font-family:'Space Mono',monospace; }
-    .stat-label { font-size:0.8rem;color:var(--muted);letter-spacing:0.05em; }
-
-    #skills { background:var(--bg); }
-    .skills-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px; }
-    .skill-group { background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;backdrop-filter:blur(10px);transition:border-color 0.3s,transform 0.3s,box-shadow 0.3s;position:relative;overflow:hidden; }
-    .skill-group::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);transform-origin:left;transition:transform 0.4s; }
-    .skill-group:hover::before { transform:scaleX(1); }
-    .skill-group:hover { border-color:rgba(0,229,255,0.25);transform:translateY(-6px);box-shadow:var(--glow); }
-    .skill-group-icon { font-size:1.8rem;margin-bottom:16px; }
-    .skill-group-title { font-size:0.75rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px; }
-    .skill-group-title-ar { font-family:'Cairo',sans-serif;font-size:0.75rem;color:var(--muted);margin-bottom:20px; }
-    .skill-tags { display:flex;flex-wrap:wrap;gap:8px; }
-    .skill-tag { padding:5px 14px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);border-radius:100px;font-size:0.78rem;color:var(--text);font-family:'Space Mono',monospace;transition:background 0.2s,border-color 0.2s; }
-    .skill-tag:hover { background:rgba(0,229,255,0.12);border-color:var(--accent); }
-
-    #projects { background:var(--bg2); }
-    .projects-grid { display:grid;grid-template-columns:1fr 1fr;gap:28px; }
-    .project-card { background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;backdrop-filter:blur(10px);transition:border-color 0.3s,transform 0.3s,box-shadow 0.3s;position:relative;overflow:hidden; }
-    .project-card.featured { grid-column:1/-1;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center; }
-    .project-card:hover { border-color:rgba(0,229,255,0.3);transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,0.4),var(--glow); }
-    .project-number { font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--muted);margin-bottom:20px; }
-    .project-title { font-size:1.5rem;font-weight:800;margin-bottom:6px;line-height:1.2; }
-    .project-title-ar { font-family:'Cairo',sans-serif;font-size:0.9rem;color:var(--muted);margin-bottom:16px; }
-    .project-desc { font-size:0.9rem;color:var(--muted);line-height:1.8;margin-bottom:28px; }
-    .project-stack { display:flex;flex-wrap:wrap;gap:8px; }
-    .project-tech { padding:4px 12px;background:rgba(123,97,255,0.1);border:1px solid rgba(123,97,255,0.2);border-radius:4px;font-size:0.72rem;color:var(--accent2);font-family:'Space Mono',monospace; }
-    .project-visual { background:linear-gradient(135deg,rgba(0,229,255,0.05),rgba(123,97,255,0.08));border:1px solid var(--border);border-radius:12px;height:200px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;overflow:hidden; }
-    .project-visual::after { content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,229,255,0.05),transparent); }
-    .project-badge { display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;background:rgba(240,192,64,0.12);border:1px solid rgba(240,192,64,0.25);color:var(--gold); }
-
-    #contact { background:var(--bg); }
-    .contact-wrapper { display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start; }
-    .contact-info h3 { font-size:1.8rem;font-weight:800;margin-bottom:8px; }
-    .contact-info p { color:var(--muted);line-height:1.8;margin:16px 0 36px; }
-    .contact-links { display:flex;flex-direction:column;gap:14px; }
-    .contact-link { 
-      display:flex;align-items:center;gap:16px;padding:16px 20px;
-      background:var(--card);border:1px solid var(--border);border-radius:10px;
-      text-decoration:none;transition:border-color 0.3s,transform 0.3s; 
-    }
-    .contact-link:hover { border-color:var(--accent);transform:translateX(6px); }
-    .contact-link-icon { width:36px;height:36px;border-radius:8px;background:rgba(0,229,255,0.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0; }
-    .contact-link-text { font-size:0.85rem;color:var(--text); }
-    .contact-link-sub { font-size:0.72rem;color:var(--muted);margin-top:2px; }
-    .contact-form { display:flex;flex-direction:column;gap:16px; }
-    .form-row { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
-    .form-field { display:flex;flex-direction:column;gap:8px; }
-    .form-label { font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-family:'Space Mono',monospace; }
-    .form-input, .form-textarea { 
-      background:var(--card);border:1px solid var(--border);border-radius:8px;
-      padding:14px 16px;color:var(--text);font-family:'Syne',sans-serif;
-      font-size:0.9rem;outline:none;transition:border-color 0.3s,box-shadow 0.3s;resize:none; 
-    }
-    .form-input:focus, .form-textarea:focus { border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,229,255,0.06); }
-    .form-textarea { height:160px; }
-    .btn-send { 
-      display:flex;align-items:center;justify-content:center;gap:10px;
-      padding:15px 32px;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;
-      text-transform:uppercase;background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:var(--bg);border:none;border-radius:8px;cursor: pointer;
-      transition:transform 0.2s,box-shadow 0.2s;
-      box-shadow:0 0 24px rgba(0,229,255,0.25); 
-    }
-    .btn-send:hover { transform:translateY(-2px);box-shadow:0 0 40px rgba(0,229,255,0.4); }
-
-    footer { 
-      border-top:1px solid var(--border);padding:36px 60px;
-      display:flex;align-items:center;justify-content:space-between;
-      position:relative;z-index:1; 
-    }
-    .footer-copy { font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted);letter-spacing:0.1em; }
-    .footer-copy span { color:var(--accent); }
-    .footer-ar { font-family:'Cairo',sans-serif;font-size:0.78rem;color:var(--muted); }
-
-    .ar-text { display:none; }
-    .en-text { display:block; }
-    body.ar-mode .ar-text { display:block; }
-    body.ar-mode .en-text { display:none; }
-    body.ar-mode { font-family:'Cairo',sans-serif;direction:rtl; }
-    body.ar-mode nav { flex-direction:row-reverse; }
-    body.ar-mode .nav-links { flex-direction:row-reverse; }
-    body.ar-mode .scroll-hint { left:auto;right:60px;flex-direction:row-reverse; }
-    body.ar-mode .section-label { flex-direction:row-reverse; }
-    body.ar-mode .section-label::before { display:none; }
-    body.ar-mode .section-label::after { content:'';width:24px;height:1px;background:var(--accent); }
-    body.ar-mode .contact-link:hover { transform:translateX(-6px); }
-
-    .reveal { opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease; }
-    .reveal.visible { opacity:1;transform:translateY(0); }
-
-    @media (max-width:900px) {
-      nav { padding:16px 24px; }
-      .nav-links { display:none; }
-      section { padding:80px 24px; }
-      #hero { padding:120px 24px 60px; }
-      .scroll-hint { left:24px; }
-      .about-grid { grid-template-columns:1fr;gap:40px; }
-      .projects-grid { grid-template-columns:1fr; }
-      .project-card.featured { grid-column:1;grid-template-columns:1fr; }
-      .contact-wrapper { grid-template-columns:1fr;gap:48px; }
-      footer { flex-direction:column;gap:10px;text-align:center;padding:28px 24px; }
-      .form-row { grid-template-columns:1fr; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Wilson Michael - Aspiring Full Stack Developer">
+    <title>Wilson Michael | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&family=Noto+Sans+Arabic:wght@400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        .ar body {
+            font-family: 'Noto Sans Arabic', 'Inter', system_ui, sans-serif;
+        }
+        .heading-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .ar .heading-font {
+            font-family: 'Noto Sans Arabic', sans-serif;
+        }
+        .hero-bg {
+            background: radial-gradient(circle at 30% 20%, rgba(0, 245, 212, 0.15) 0%, transparent 50%);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #00f5d4;
+        }
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        .section-header:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: #00f5d4;
+            bottom: -8px;
+            left: 0;
+            border-radius: 9999px;
+        }
+        .project-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .project-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 30px 60px -15px rgb(0 245 212 / 0.3);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        .tail-container * {
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, transform, opacity;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 300ms;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-zinc-950 text-white tail-container">
 
-<nav>
-  <div class="nav-logo">W<span>.</span>M</div>
-  <ul class="nav-links">
-    <li><a href="#about"><span class="en-text">About</span><span class="ar-text">عني</span></a></li>
-    <li><a href="#skills"><span class="en-text">Skills</span><span class="ar-text">مهاراتي</span></a></li>
-    <li><a href="#projects"><span class="en-text">Projects</span><span class="ar-text">مشاريعي</span></a></li>
-    <li><a href="#contact"><span class="en-text">Contact</span><span class="ar-text">تواصل</span></a></li>
-  </ul>
-  <button class="lang-toggle" id="langBtn">AR / EN</button>
-</nav>
-
-<section id="hero">
-  <div class="hero-glow"></div>
-  <div class="hero-glow2"></div>
-  <div class="scroll-hint">
-    <div class="scroll-line"></div>
-    <span class="en-text">Scroll</span>
-    <span class="ar-text">اسحب لأسفل</span>
-  </div>
-  <div class="hero-content">
-    <div class="hero-tag">
-      <span class="en-text">Full Stack Developer</span>
-      <span class="ar-text">مطور ويب متكامل</span>
-    </div>
-    <h1 class="hero-name">
-      <span class="first">Wilson </span><span class="last">Michael</span>
-    </h1>
-    <p class="hero-title">
-      <span class="en-text">Building <span class="highlight">end-to-end</span> web experiences</span>
-      <span class="ar-text">أبني تجارب ويب <span class="highlight">متكاملة من الألف إلى الياء</span></span>
-    </p>
-    <p class="hero-desc">
-      <span class="en-text">Passionate full stack developer crafting robust, scalable web applications. From pixel-perfect frontends to powerful backends — I turn ideas into reality.</span>
-      <span class="ar-text">مطور ويب شغوف بتطوير تطبيقات ويب قوية وقابلة للتوسع. من الواجهات الأمامية المتقنة إلى الخوادم القوية — أحوّل الأفكار إلى واقع.</span>
-    </p>
-    <div class="hero-cta">
-      <a href="#projects" class="btn-primary">
-        <span class="en-text">View My Work ↓</span>
-        <span class="ar-text">شوف أعمالي ↓</span>
-      </a>
-      <a href="#contact" class="btn-outline">
-        <span class="en-text">Get In Touch</span>
-        <span class="ar-text">تواصل معي</span>
-      </a>
-    </div>
-  </div>
-</section>
-
-<section id="about">
-  <div class="section-header reveal">
-    <div class="section-label">
-      <span class="en-text">01 — About</span><span class="ar-text">٠١ — عني</span>
-    </div>
-    <h2 class="section-title">
-      <span class="en-text">Who I Am</span><span class="ar-text">من أنا</span>
-    </h2>
-  </div>
-  <div class="about-grid">
-    <div class="about-text reveal">
-      <p class="en-text">I'm <span class="em">Wilson Michael</span>, a passionate <span class="accent">Full Stack Developer</span> with a strong foundation in both frontend and backend technologies. I love building digital products that are both beautiful and functional.</p>
-      <p class="ar-text">أنا <span class="em">ويلسون مايكل</span>، مطور ويب متكامل شغوف بتقنيات الـ<span class="accent">Frontend والـ Backend</span> على حدٍّ سواء. أحب بناء منتجات رقمية جميلة وعملية في نفس الوقت.</p>
-      <p class="en-text">I specialize in creating complete web solutions — from designing interactive user interfaces to building secure, efficient server-side applications with database integration.</p>
-      <p class="ar-text">متخصص في بناء حلول ويب متكاملة — من تصميم واجهات مستخدم تفاعلية إلى بناء تطبيقات خادم آمنة وفعّالة مع تكامل قواعد البيانات.</p>
-      <p class="en-text">When I'm not coding, I'm exploring new technologies and finding better ways to solve problems through clean, maintainable code.</p>
-      <p class="ar-text">حين لا أكون أبرمج، أستكشف تقنيات جديدة وأبحث عن طرق أفضل لحل المشكلات من خلال كود نظيف وقابل للصيانة.</p>
-    </div>
-    <div class="about-stats reveal">
-      <div class="stat-card">
-        <div class="stat-num">5+</div>
-        <div class="stat-label"><span class="en-text">Technologies Mastered</span><span class="ar-text">تقنية متقنة</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">01</div>
-        <div class="stat-label"><span class="en-text">Featured Project</span><span class="ar-text">مشروع مميز</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">2</div>
-        <div class="stat-label"><span class="en-text">Dev Tools in Stack</span><span class="ar-text">أداة تطوير</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">∞</div>
-        <div class="stat-label"><span class="en-text">Passion for Code</span><span class="ar-text">شغف بالبرمجة</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="skills">
-  <div class="section-header reveal">
-    <div class="section-label">
-      <span class="en-text">02 — Skills</span><span class="ar-text">٠٢ — مهاراتي</span>
-    </div>
-    <h2 class="section-title">
-      <span class="en-text">My Tech Stack</span><span class="ar-text">تقنياتي</span>
-    </h2>
-  </div>
-  <div class="skills-grid">
-    <div class="skill-group reveal">
-      <div class="skill-group-icon">🎨</div>
-      <div class="skill-group-title">Frontend</div>
-      <div class="skill-group-title-ar">الواجهة الأمامية</div>
-      <div class="skill-tags">
-        <span class="skill-tag">HTML5</span><span class="skill-tag">CSS3</span>
-        <span class="skill-tag">JavaScript</span><span class="skill-tag">Responsive Design</span>
-      </div>
-    </div>
-    <div class="skill-group reveal">
-      <div class="skill-group-icon">⚙️</div>
-      <div class="skill-group-title">Backend</div>
-      <div class="skill-group-title-ar">الواجهة الخلفية</div>
-      <div class="skill-tags">
-        <span class="skill-tag">PHP</span><span class="skill-tag">Server-Side Logic</span>
-        <span class="skill-tag">REST APIs</span><span class="skill-tag">Authentication</span>
-      </div>
-    </div>
-    <div class="skill-group reveal">
-      <div class="skill-group-icon">🗄️</div>
-      <div class="skill-group-title">Database</div>
-      <div class="skill-group-title-ar">قواعد البيانات</div>
-      <div class="skill-tags">
-        <span class="skill-tag">MySQL</span><span class="skill-tag">SQL Queries</span>
-        <span class="skill-tag">Database Design</span>
-      </div>
-    </div>
-    <div class="skill-group reveal">
-      <div class="skill-group-icon">🛠️</div>
-      <div class="skill-group-title">Tools & Environment</div>
-      <div class="skill-group-title-ar">الأدوات والبيئة</div>
-      <div class="skill-tags">
-        <span class="skill-tag">VS Code</span><span class="skill-tag">XAMPP</span>
-        <span class="skill-tag">Git</span><span class="skill-tag">Apache</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="projects">
-  <div class="section-header reveal">
-    <div class="section-label">
-      <span class="en-text">03 — Projects</span><span class="ar-text">٠٣ — مشاريعي</span>
-    </div>
-    <h2 class="section-title">
-      <span class="en-text">Featured Work</span><span class="ar-text">أبرز أعمالي</span>
-    </h2>
-  </div>
-  <div class="projects-grid">
-    <div class="project-card featured reveal">
-      <div>
-        <div class="project-number">PROJECT — 001</div>
-        <div class="project-badge">⭐ Featured Project</div>
-        <h3 class="project-title">
-          <span class="en-text">Virgin & Angel Michael Church</span>
-          <span class="ar-text">كنيسة العذراء والملاك ميخائيل</span>
-        </h3>
-        <p class="project-title-ar">
-          <span class="en-text">بالخلفاوي — Al-Khalfawi</span>
-          <span class="ar-text">Al-Khalfawi Church Website</span>
-        </p>
-        <p class="project-desc">
-          <span class="en-text">A fully functional church website built to serve the community. Features include service schedules, announcements, event management, and a contact system. Designed with a focus on accessibility and ease of navigation for all age groups.</span>
-          <span class="ar-text">موقع كنيسة متكامل الوظائف مبني لخدمة المجتمع. يتضمن جداول القداسات، الإعلانات، إدارة الفعاليات، ونظام تواصل. صُمم مع التركيز على سهولة الوصول والتصفح لجميع الفئات العمرية.</span>
-        </p>
-        <div class="project-stack">
-          <span class="project-tech">HTML</span><span class="project-tech">CSS</span>
-          <span class="project-tech">JavaScript</span><span class="project-tech">PHP</span>
-          <span class="project-tech">MySQL</span><span class="project-tech">XAMPP</span>
-        </div>
-      </div>
-      <div class="project-visual">⛪</div>
-    </div>
-  </div>
-</section>
-
-<section id="contact">
-  <div class="section-header reveal">
-    <div class="section-label">
-      <span class="en-text">04 — Contact</span><span class="ar-text">٠٤ — تواصل</span>
-    </div>
-    <h2 class="section-title">
-      <span class="en-text">Let's Work Together</span><span class="ar-text">لنعمل معاً</span>
-    </h2>
-  </div>
-  <div class="contact-wrapper">
-    <div class="contact-info reveal">
-      <h3>
-        <span class="en-text">Get In Touch</span>
-        <span class="ar-text">تواصل معي</span>
-      </h3>
-      <p>
-        <span class="en-text">Have a project in mind? Looking for a developer to bring your idea to life? I'd love to hear from you. Let's create something amazing together.</span>
-        <span class="ar-text">هل لديك مشروع في ذهنك؟ تبحث عن مطور لإحياء فكرتك؟ يسعدني التحدث معك. لنصنع شيئاً رائعاً معاً.</span>
-      </p>
-      <div class="contact-links">
-        <a href="mailto:wilsonmichael15112011@gmail.com" class="contact-link">
-          <div class="contact-link-icon">✉️</div>
-          <div>
-            <div class="contact-link-text">wilsonmichael15112011@gmail.com</div>
-            <div class="contact-link-sub">
-              <span class="en-text">Send me an email</span>
-              <span class="ar-text">راسلني بالبريد الإلكتروني</span>
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-lg border-b border-white/10 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-[#00f5d4] text-zinc-950 font-bold text-3xl flex items-center justify-center rounded-2xl rotate-12 hover:rotate-0">W</div>
+                <h1 class="heading-font text-3xl font-semibold tracking-tight" id="logo">Wilson Michael</h1>
             </div>
-          </div>
-        </a>
-      </div>
-    </div>
+            
+            <div class="hidden md:flex gap-8 text-lg" id="nav-menu">
+                <a href="#about" class="nav-link hover:text-[#00f5d4]">About</a>
+                <a href="#projects" class="nav-link hover:text-[#00f5d4]">Projects</a>
+                <a href="#skills" class="nav-link hover:text-[#00f5d4]">Skills</a>
+                <a href="#contact" class="nav-link hover:text-[#00f5d4]">Contact</a>
+            </div>
 
-    <div class="contact-form reveal">
-      <form action="https://formspree.io/f/mdayoyeb" method="POST">
-        <div class="form-row">
-          <div class="form-field">
-            <label class="form-label">
-              <span class="en-text">Name</span><span class="ar-text">الاسم</span>
-            </label>
-            <input type="text" name="name" class="form-input" placeholder="John Doe" required />
-          </div>
-          <div class="form-field">
-            <label class="form-label">
-              <span class="en-text">Email</span><span class="ar-text">البريد الإلكتروني</span>
-            </label>
-            <input type="email" name="_replyto" class="form-input" placeholder="john@example.com" required />
-          </div>
+            <div class="flex items-center gap-4">
+                <!-- Language Button -->
+                <button onclick="toggleLanguage()" 
+                        class="px-5 py-2.5 border border-white/30 hover:border-[#00f5d4] rounded-3xl text-sm font-medium flex items-center gap-2">
+                    <span id="lang-text">EN</span>
+                    <i class="fa-solid fa-globe"></i>
+                </button>
+
+                <a href="mailto:wilsonmichael15112011@gmail.com" 
+                   class="px-6 py-3 bg-[#00f5d4] text-zinc-950 font-semibold rounded-3xl hover:bg-white">
+                    Get in touch
+                </a>
+            </div>
         </div>
-        <div class="form-field">
-          <label class="form-label">
-            <span class="en-text">Message</span><span class="ar-text">الرسالة</span>
-          </label>
-          <textarea name="message" class="form-textarea" placeholder="Tell me about your project..." required></textarea>
+    </nav>
+
+    <!-- Hero -->
+    <header id="home" class="min-h-screen hero-bg flex items-center pt-20">
+        <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-12 gap-12 items-center">
+            <div class="md:col-span-7 animate-fade-in-up">
+                <div class="inline-flex items-center gap-2 px-5 py-2 bg-white/10 rounded-3xl text-sm mb-8">
+                    <span class="w-2 h-2 bg-[#00f5d4] rounded-full animate-pulse"></span>
+                    <span id="location">CAIRO, EGYPT</span>
+                </div>
+                <h1 class="heading-font text-6xl md:text-7xl font-semibold tracking-tighter leading-none mb-6" id="hero-title">
+                    Hi, I'm Wilson Michael
+                </h1>
+                <p class="text-4xl text-[#00f5d4] font-medium mb-8" id="hero-subtitle">
+                    Aspiring Full Stack Developer
+                </p>
+                <p class="text-xl text-white/80 max-w-lg mb-12" id="hero-desc">
+                    I'm a student passionate about building modern, interactive, and user-friendly websites.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#projects" 
+                       class="px-8 py-5 bg-[#00f5d4] text-zinc-950 font-semibold text-lg rounded-3xl flex items-center gap-3 hover:scale-105">
+                        View My Work
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="#contact" 
+                       class="px-8 py-5 border-2 border-white/70 hover:border-[#00f5d4] font-semibold text-lg rounded-3xl">
+                        Let's Talk
+                    </a>
+                </div>
+            </div>
+            <div class="md:col-span-5 flex justify-center animate-fade-in-up" style="animation-delay: 200ms">
+                <div class="w-80 h-80 bg-gradient-to-br from-[#00f5d4] to-cyan-400 rounded-3xl flex items-center justify-center text-9xl shadow-2xl hover:rotate-6">
+                    👨‍💻
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn-send">
-          <span class="en-text">Send Message →</span>
-          <span class="ar-text">أرسل الرسالة →</span>
-        </button>
-      </form>
-    </div>
-  </div>
-</section>
+    </header>
 
-<footer>
-  <div class="footer-copy">© 2025 <span>Wilson Michael</span> — Built with ❤️</div>
-  <div class="footer-ar">
-    <span class="en-text">All rights reserved</span>
-    <span class="ar-text">جميع الحقوق محفوظة</span>
-  </div>
-</footer>
+    <!-- About -->
+    <section id="about" class="py-24 bg-white/5">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="section-header heading-font text-5xl font-semibold mb-12 animate-fade-in-up" id="about-title">About Me</h2>
+            <div class="max-w-3xl text-lg leading-relaxed text-white/80 space-y-6" id="about-text">
+                <p>
+                    I’m a student and aspiring web developer who enjoys building modern, interactive websites using HTML, CSS, and JavaScript. 
+                    I’m passionate about improving my skills, especially in creating dynamic designs and user-friendly experiences.
+                </p>
+                <p>
+                    I like turning ideas into real projects and constantly learning new technologies to level up. 
+                    When I’m not coding, I enjoy exploring new tools and working on creative projects for my portfolio.
+                </p>
+            </div>
+        </div>
+    </section>
 
-<script>
-  const langBtn = document.getElementById('langBtn');
-  let isAr = false;
-  langBtn.addEventListener('click',()=>{
-    isAr=!isAr;
-    document.body.classList.toggle('ar-mode',isAr);
-    langBtn.textContent = isAr ? 'EN / AR' : 'AR / EN';
-  });
+    <!-- Projects -->
+    <section id="projects" class="py-24">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="section-header heading-font text-5xl font-semibold mb-12 animate-fade-in-up" id="projects-title">Featured Project</h2>
+            
+            <div class="bg-zinc-900 rounded-3xl overflow-hidden border border-white/10 project-card animate-fade-in-up">
+                <div class="h-80 bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-8xl">
+                    ⛪
+                </div>
+                <div class="p-10">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-3xl font-semibold mb-2" id="project-name">كنيسة العذراء مريم والملاك ميخائيل بالخلفاوي</h3>
+                            <p class="text-[#00f5d4] font-medium" id="project-year">Church Website • 2025</p>
+                        </div>
+                        <span class="text-sm bg-white/10 px-4 py-2 rounded-3xl">Live Project</span>
+                    </div>
+                    <p class="mt-6 text-white/70 text-lg" id="project-desc">
+                        A dynamic informational website for the Church of Virgin Mary and Archangel Michael in Khalfawi. 
+                        It provides important information about the church with a clean, modern, and responsive design.
+                    </p>
+                    <div class="mt-8 flex flex-wrap gap-3">
+                        <span class="px-5 py-2 bg-white/10 rounded-3xl text-sm">HTML</span>
+                        <span class="px-5 py-2 bg-white/10 rounded-3xl text-sm">CSS</span>
+                        <span class="px-5 py-2 bg-white/10 rounded-3xl text-sm">JavaScript</span>
+                        <span class="px-5 py-2 bg-white/10 rounded-3xl text-sm">PHP</span>
+                        <span class="px-5 py-2 bg-white/10 rounded-3xl text-sm">MySQL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  const reveals = document.querySelectorAll('.reveal');
-  const obs = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); } });
-  },{threshold:0.1});
-  reveals.forEach(el=>obs.observe(el));
+    <!-- Skills -->
+    <section id="skills" class="py-24 bg-white/5">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="section-header heading-font text-5xl font-semibold mb-12 text-center animate-fade-in-up" id="skills-title">My Skills</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-zinc-900 p-8 rounded-3xl text-center hover:bg-zinc-800 project-card">
+                    <i class="fa-brands fa-html5 text-6xl text-orange-500 mb-4"></i>
+                    <h4 class="font-semibold text-xl">HTML5</h4>
+                </div>
+                <div class="bg-zinc-900 p-8 rounded-3xl text-center hover:bg-zinc-800 project-card">
+                    <i class="fa-brands fa-css3-alt text-6xl text-blue-500 mb-4"></i>
+                    <h4 class="font-semibold text-xl">CSS3</h4>
+                </div>
+                <div class="bg-zinc-900 p-8 rounded-3xl text-center hover:bg-zinc-800 project-card">
+                    <i class="fa-brands fa-js text-6xl text-yellow-400 mb-4"></i>
+                    <h4 class="font-semibold text-xl">JavaScript</h4>
+                </div>
+                <div class="bg-zinc-900 p-8 rounded-3xl text-center hover:bg-zinc-800 project-card">
+                    <i class="fa-solid fa-database text-6xl text-[#00f5d4] mb-4"></i>
+                    <h4 class="font-semibold text-xl">MySQL</h4>
+                </div>
+                <div class="bg-zinc-900 p-8 rounded-3xl text-center hover:bg-zinc-800 project-card">
+                    <i class="fa-solid fa-server text-6xl text-[#00f5d4] mb-4"></i>
+                    <h4 class="font-semibold text-xl">PHP</h4>
+                </div>
+                <div class="bg-zinc-900 p-8 rounded-3xl text-center hover:bg-zinc-800 project-card col-span-2 md:col-span-1">
+                    <h4 class="font-semibold text-xl">Responsive Design</h4>
+                </div>
+                <div class="bg-zinc-900 p-8 rounded-3xl text-center hover:bg-zinc-800 project-card col-span-2 md:col-span-1">
+                    <h4 class="font-semibold text-xl">Dynamic Websites</h4>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  document.querySelectorAll('.skills-grid .skill-group, .about-stats .stat-card').forEach((el,i)=>{
-    el.style.transitionDelay = (i*0.1)+'s';
-  });
-</script>
+    <!-- Contact -->
+    <section id="contact" class="py-24 bg-zinc-900">
+        <div class="max-w-2xl mx-auto px-6">
+            <h2 class="section-header heading-font text-5xl font-semibold mb-6 text-center animate-fade-in-up" id="contact-title">Let's Work Together</h2>
+            <p class="text-center text-xl text-white/70 mb-12" id="contact-desc">
+                Have a project or just want to say hello? Send me a message!
+            </p>
+            
+            <form action="https://formspree.io/f/mdayoyeb" method="POST" class="space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <input type="text" name="name" placeholder="Your Name" required
+                           class="bg-zinc-800 border border-white/20 focus:border-[#00f5d4] rounded-3xl px-6 py-5 outline-none text-white placeholder:text-white/40">
+                    <input type="email" name="email" placeholder="Your Email" required
+                           class="bg-zinc-800 border border-white/20 focus:border-[#00f5d4] rounded-3xl px-6 py-5 outline-none text-white placeholder:text-white/40">
+                </div>
+                <textarea name="message" rows="6" placeholder="Your Message..." required
+                          class="w-full bg-zinc-800 border border-white/20 focus:border-[#00f5d4] rounded-3xl px-6 py-5 outline-none text-white placeholder:text-white/40 resize-none"></textarea>
+                
+                <button type="submit"
+                        class="w-full py-6 bg-[#00f5d4] text-zinc-950 text-xl font-semibold rounded-3xl flex items-center justify-center gap-3 hover:scale-105">
+                    SEND MESSAGE
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
+            
+            <p class="text-center text-white/60 mt-10">
+                Or email me directly: 
+                <a href="mailto:wilsonmichael15112011@gmail.com" class="text-[#00f5d4] hover:underline">
+                    wilsonmichael15112011@gmail.com
+                </a>
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-white/10 bg-black">
+        <div class="max-w-6xl mx-auto px-6 text-center text-white/50 text-sm" id="footer-text">
+            © 2026 Wilson Michael • Cairo, Egypt<br>
+            Built with passion and a lot of coffee ☕
+        </div>
+    </footer>
+
+    <script>
+        // Tailwind script already loaded via CDN
+
+        // Language Toggle
+        let isArabic = false;
+
+        const translations = {
+            en: {
+                logo: "Wilson Michael",
+                location: "CAIRO, EGYPT",
+                heroTitle: "Hi, I'm Wilson Michael",
+                heroSubtitle: "Aspiring Full Stack Developer",
+                heroDesc: "I'm a student passionate about building modern, interactive, and user-friendly websites.",
+                aboutTitle: "About Me",
+                aboutText: `<p>I’m a student and aspiring web developer who enjoys building modern, interactive websites using HTML, CSS, and JavaScript. I’m passionate about improving my skills, especially in creating dynamic designs and user-friendly experiences.</p><p>I like turning ideas into real projects and constantly learning new technologies to level up. When I’m not coding, I enjoy exploring new tools and working on creative projects for my portfolio.</p>`,
+                projectsTitle: "Featured Project",
+                projectName: "كنيسة العذراء مريم والملاك ميخائيل بالخلفاوي",
+                projectYear: "Church Website • 2025",
+                projectDesc: "A dynamic informational website for the Church of Virgin Mary and Archangel Michael in Khalfawi. It provides important information about the church with a clean, modern, and responsive design.",
+                skillsTitle: "My Skills",
+                contactTitle: "Let's Work Together",
+                contactDesc: "Have a project or just want to say hello? Send me a message!",
+                footerText: "© 2026 Wilson Michael • Cairo, Egypt<br>Built with passion and a lot of coffee ☕"
+            },
+            ar: {
+                logo: "ويلسون مايكل",
+                location: "القاهرة، مصر",
+                heroTitle: "مرحبا، أنا ويلسون مايكل",
+                heroSubtitle: "مطور ويب طموح",
+                heroDesc: "أنا طالب شغوف ببناء مواقع ويب حديثة وتفاعلية وسهلة الاستخدام.",
+                aboutTitle: "عني",
+                aboutText: `<p>أنا طالب ومطور ويب طموح أستمتع ببناء مواقع ويب حديثة وتفاعلية باستخدام HTML وCSS وJavaScript. أنا شغوف بتحسين مهاراتي، خاصة في إنشاء تصاميم ديناميكية وتجارب مستخدم سهلة.</p><p>أحب تحويل الأفكار إلى مشاريع حقيقية وأتعلم باستمرار تقنيات جديدة للتقدم. عندما لا أكون أبرمج، أستمتع باكتشاف أدوات جديدة والعمل على مشاريع إبداعية لمحفظتي.</p>`,
+                projectsTitle: "المشروع المميز",
+                projectName: "كنيسة العذراء مريم والملاك ميخائيل بالخلفاوي",
+                projectYear: "موقع الكنيسة • ٢٠٢٥",
+                projectDesc: "موقع معلوماتي ديناميكي لكنيسة العذراء مريم والملاك ميخائيل بالخلفاوي. يقدم معلومات مهمة عن الكنيسة بتصميم نظيف وحديث ومتجاوب.",
+                skillsTitle: "مهاراتي",
+                contactTitle: "دعنا نعمل معاً",
+                contactDesc: "هل لديك مشروع أو تريد فقط أن تقول مرحبا؟ أرسل لي رسالة!",
+                footerText: "© ٢٠٢٦ ويلسون مايكل • القاهرة، مصر<br>مبني بحماس وكثير من القهوة ☕"
+            }
+        };
+
+        function toggleLanguage() {
+            isArabic = !isArabic;
+            const root = document.getElementById('root');
+            const langText = document.getElementById('lang-text');
+
+            if (isArabic) {
+                root.lang = 'ar';
+                root.dir = 'rtl';
+                document.body.classList.add('ar');
+                langText.textContent = 'AR';
+            } else {
+                root.lang = 'en';
+                root.dir = 'ltr';
+                document.body.classList.remove('ar');
+                langText.textContent = 'EN';
+            }
+
+            updateContent();
+        }
+
+        function updateContent() {
+            const lang = isArabic ? 'ar' : 'en';
+            const t = translations[lang];
+
+            document.getElementById('logo').textContent = t.logo;
+            document.getElementById('location').textContent = t.location;
+            document.getElementById('hero-title').textContent = t.heroTitle;
+            document.getElementById('hero-subtitle').textContent = t.heroSubtitle;
+            document.getElementById('hero-desc').textContent = t.heroDesc;
+            document.getElementById('about-title').textContent = t.aboutTitle;
+            document.getElementById('about-text').innerHTML = t.aboutText;
+            document.getElementById('projects-title').textContent = t.projectsTitle;
+            document.getElementById('project-name').textContent = t.projectName;
+            document.getElementById('project-year').textContent = t.projectYear;
+            document.getElementById('project-desc').textContent = t.projectDesc;
+            document.getElementById('skills-title').textContent = t.skillsTitle;
+            document.getElementById('contact-title').textContent = t.contactTitle;
+            document.getElementById('contact-desc').textContent = t.contactDesc;
+            document.getElementById('footer-text').innerHTML = t.footerText;
+
+            // Update nav menu for RTL
+            const nav = document.getElementById('nav-menu');
+            if (isArabic) {
+                nav.style.flexDirection = 'row-reverse';
+            } else {
+                nav.style.flexDirection = 'row';
+            }
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Trigger animations on scroll (simple version)
+        window.addEventListener('scroll', () => {
+            document.querySelectorAll('.animate-fade-in-up').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.85) {
+                    el.style.opacity = '1';
+                }
+            });
+        });
+
+        // Form success alert
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('submitted') === 'true') {
+                alert(isArabic ? '✅ شكراً لك! تم إرسال رسالتك بنجاح.' : '✅ Thank you! Your message has been sent successfully.');
+            }
+        });
+    </script>
 </body>
 </html>
